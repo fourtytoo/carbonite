@@ -92,42 +92,42 @@
   to install."}
   clojure-primitives
   (let [prims (array-map
-               Keyword (ClojureReaderSerializer.)
-               Symbol  (ClojureReaderSerializer.)
-               Ratio   (RatioSerializer.)
-               Var     (PrintDupSerializer.))]
+               Keyword ClojureReaderSerializer
+               Symbol  ClojureReaderSerializer
+               Ratio   RatioSerializer
+               Var     PrintDupSerializer)]
     (if-let [big-int (try (Class/forName "clojure.lang.BigInt")
                           (catch ClassNotFoundException _))]
-      (assoc prims big-int (ClojureReaderSerializer.))
+      (assoc prims big-int ClojureReaderSerializer)
       prims)))
 
 (def java-primitives
   (array-map
-   Timestamp     (TimestampSerializer.)
-   java.sql.Date (SqlDateSerializer.)
-   java.sql.Time (SqlTimeSerializer.)
-   java.net.URI  (URISerializer.)
-   Pattern       (RegexSerializer.)
-   UUID          (UUIDSerializer.)))
+   Timestamp     TimestampSerializer
+   java.sql.Date SqlDateSerializer
+   java.sql.Time SqlTimeSerializer
+   java.net.URI  URISerializer
+   Pattern       RegexSerializer
+   UUID          UUIDSerializer))
 
 (def clojure-collections
   (concat
    ;; collections where we can use transients for perf
-   [[PersistentVector (ClojureVecSerializer.)]
-    [PersistentHashSet (ClojureSetSerializer.)]
-    [MapEntry (ClojureVecSerializer.)]]
+   [[PersistentVector ClojureVecSerializer]
+    [PersistentHashSet ClojureSetSerializer]
+    [MapEntry ClojureVecSerializer]]
 
    ;; list/seq collections
-   (map #(vector % (ClojureSeqSerializer.))
+   (map #(vector % ClojureSeqSerializer)
         [Cons PersistentList$EmptyList PersistentList
          LazySeq IteratorSeq ArraySeq
          PersistentVector$ChunkedSeq])
 
    ;; other seqs
-   [[StringSeq (StringSeqSerializer.)]]
+   [[StringSeq StringSeqSerializer]]
 
    ;; maps - use transients for perf
-   (map #(vector % (ClojureMapSerializer.))
+   (map #(vector % ClojureMapSerializer)
         [PersistentArrayMap PersistentHashMap PersistentStructMap])))
 
 ;; Copyright 2011 Revelytix, Inc.
